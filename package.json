@@ -1,0 +1,62 @@
+{
+  "name": "license-checker",
+  "version": "1.0.0",
+  "description": "Kiểm tra bản quyền & phát hiện crack phần mềm trên Windows",
+  "main": "main.js",
+  "author": "AnhNVT",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win",
+    "dev": "node server.js"
+  },
+  "build": {
+    "appId": "com.anhnvt.license-checker",
+    "productName": "License Checker",
+    "copyright": "Copyright © 2026 AnhNVT",
+    "win": {
+      "target": [
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "assets/icon.png",
+      "requestedExecutionLevel": "requireAdministrator",
+      "signAndEditExecutable": false
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": true,
+      "allowToChangeInstallationDirectory": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "License Checker"
+    },
+    "portable": {
+      "artifactName": "LicenseChecker-Portable.exe"
+    },
+    "forceCodeSigning": false,
+    "files": [
+      "main.js",
+      "server-embed.js",
+      "scan.ps1",
+      "public/**/*",
+      "assets/**/*",
+      "node_modules/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "scan.ps1",
+        "to": "scan.ps1"
+      }
+    ],
+    "directories": {
+      "output": "dist"
+    }
+  },
+  "devDependencies": {
+    "electron": "^35.0.0",
+    "electron-builder": "^26.0.0"
+  }
+}

@@ -1,0 +1,42 @@
+name: Build License Checker Agent
+
+on:
+  workflow_dispatch:
+    inputs:
+      serverUrl:
+        description: 'Server URL (VD: http://1.2.3.4:3847 hoặc https://domain.com)'
+        required: true
+        default: 'http://localhost:3847'
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup .NET 9
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x'
+
+    - name: Inject Server URL into Program.cs
+      run: |
+        $file = "LicenseCheckerAgent/Program.cs"
+        $content = Get-Content $file -Raw
+        $newContent = $content -replace 'static string ServerUrl = "http://[^"]+:3847";', "static string ServerUrl = `"${{ github.event.inputs.serverUrl }}`";"
+        Set-Content -Path $file -Value $newContent -Encoding UTF8
+        Write-Host "Injected Server URL: ${{ github.event.inputs.serverUrl }}"
+      shell: powershell
+
+    - name: Build Agent.exe
+      run: |
+        cd LicenseCheckerAgent
+        dotnet publish -c Release -r win-x64 --self-contained false -p:PublishSingleFile=true -o ../dist
+
+    - name: Upload Agent Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: LicenseCheckerAgent-${{ github.run_id }}
+        path: dist/LicenseCheckerAgent.exe
