@@ -8,7 +8,7 @@
     <PublishSingleFile>true</PublishSingleFile>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
-    <UseWindowsForms>false</UseWindowsForms>
+    <UseWindowsForms>true</UseWindowsForms>
     <!-- Use WinExe so it runs in background without a console window -->
   </PropertyGroup>
 
